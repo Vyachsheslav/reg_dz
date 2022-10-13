@@ -1,5 +1,6 @@
 import re
 import csv
+import pandas as pd
 
 
 def read_file(file_name):
@@ -56,9 +57,13 @@ def join_duplicates(contacts_list):
             contacts_list_updated.append(card)
     return contacts_list_updated
 
+def drop_duplicates():
+    df = pd.read_csv('phonebook_update.csv',delimiter=',',error_bad_lines=False)
+    df.drop_duplicates(subset=['lastname']).to_csv('phonebook.csv', index=False)
 
-def write_file(contacts_list):
-    with open("phonebook.csv", "w",  encoding="utf-8") as f:
+
+def update_phonebook(contacts_list):
+    with open("phonebook_update.csv", "w",  encoding="utf-8") as f:
         data_writer = csv.writer(f, delimiter=',')
         data_writer.writerows(contacts_list)
 
@@ -68,4 +73,6 @@ if __name__ == '__main__':
     contacts = format_number(contacts)    
     contacts = full_name(contacts)
     contacts = join_duplicates(contacts)    
-    write_file(contacts)
+    update_phonebook(contacts)
+    drop_duplicates()
+    
